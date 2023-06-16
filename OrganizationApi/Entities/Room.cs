@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace OrganizationApi.Entities;
 
 public class Room
 {
-    [Key]
+    [BsonId]
     public Guid Id { get; set; }
     public int Number { get; set; }
     public Role Description { get; set; }

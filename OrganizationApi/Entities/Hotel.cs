@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace OrganizationApi.Entities;
 
 public class Hotel
 {
-    [Key]
+    [BsonId]
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public string? Description { get; set; }
