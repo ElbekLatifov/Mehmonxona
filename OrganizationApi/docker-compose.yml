@@ -1,0 +1,29 @@
+﻿version: '3.8'
+
+services:
+  organization_api:
+    image: eax_image
+    container_name: organapi
+    ports:
+      - "5021:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  organization_db:
+    image: postgres:latest
+    container_name: organdb
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: always
+
+  chat_db:
+    image: postgres:latest
+    container_name: organdb
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: always
