@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactApi", "ContactApi.csproj", "{BD8666F1-1A21-482E-9E29-81EE929B9A9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApi", "ChatApi.csproj", "{ABD38245-0745-4540-84FE-B4D9A32095F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BD8666F1-1A21-482E-9E29-81EE929B9A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD8666F1-1A21-482E-9E29-81EE929B9A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD8666F1-1A21-482E-9E29-81EE929B9A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD8666F1-1A21-482E-9E29-81EE929B9A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD38245-0745-4540-84FE-B4D9A32095F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD38245-0745-4540-84FE-B4D9A32095F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD38245-0745-4540-84FE-B4D9A32095F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD38245-0745-4540-84FE-B4D9A32095F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {59DE14D9-7586-4940-81C9-6A5EA1854AE6}
+		SolutionGuid = {5F2EAA52-3EC9-4164-8987-A30FA105E33B}
 	EndGlobalSection
 EndGlobal

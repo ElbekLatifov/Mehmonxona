@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<HotelManager>();
 builder.Services.AddScoped<RoomManager>();
-builder.Services.AddScoped<MongoService>();
+builder.Services.AddSingleton<MongoService>();
 builder.Services.AddHostedService<IsEmptyRoomsService>();
 
 //builder.Services.AddHttpContextAccessor();

@@ -89,7 +89,7 @@ namespace IdentityApi.Controllers
                 return NotFound();
             }
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
-            _ = _context.Users.Remove(user);
+            _ = _context.Users.Remove(user!);
             return Ok("removed");
         }
         [HttpPut]

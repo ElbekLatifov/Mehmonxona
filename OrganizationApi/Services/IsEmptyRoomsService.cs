@@ -25,7 +25,7 @@ public class IsEmptyRoomsService : BackgroundService
         foreach (var hotel in hotels)
         {
             var rooms = hotel.Rooms.FindAll(p => p.IsEmpty == false);
-            var filter = Builders<Hotel>.Filter.Where(p=> true);
+            var filter = Builders<Hotel>.Filter.Eq(p=>p.Rooms, rooms);
 
             foreach (var room in rooms)
             {
@@ -35,7 +35,6 @@ public class IsEmptyRoomsService : BackgroundService
                     _mongoService._hotelCollection.ReplaceOne(filter, hotel);
                 }
             }
-            
         }
     }
 }
