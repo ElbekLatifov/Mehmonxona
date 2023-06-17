@@ -3,29 +3,23 @@ using MongoDB.Driver;
 using OrganizationApi.Accessor;
 using OrganizationApi.Entities;
 using OrganizationApi.Models;
+using OrganizationApi.Services;
 
 namespace OrganizationApi.Manager;
 
 public class HotelManager
 {
-    //private readonly UserAcessor userAcessor;
+    private MongoService MongoService { get; set; }
 
-    //public HotelManager(UserAcessor userAcessor)
-    //{
-    //    this.userAcessor = userAcessor;
-    //}
+    public HotelManager(MongoService mongoService)
+    {
+        MongoService = mongoService;
+    }
 
-    private MongoClient MongoClient = new MongoClient("mongodb://elbek:elbek@localhost:27017");
-    private IMongoDatabase Database => MongoClient.GetDatabase("hotels_db");
-    private IMongoCollection<Hotel> _hotelCollection => Database.GetCollection<Hotel>("hotels");
+    private IMongoCollection<Hotel> _hotelCollection => MongoService._hotelCollection;
 
     public async Task<Hotel> CreateHotel(CreateHotelModel model)
     {
-        //var mongo = new MongoClient("mongodb://elbek:elbek@localhost:27017");
-
-        //var database = mongo.GetDatabase("hotels_db");
-        //var collection = database.GetCollection<Hotel>("hotels");
-
         var hotel = new Hotel()
         {
             Name = model.Name,
@@ -54,7 +48,7 @@ public class HotelManager
         var hotel = await (await _hotelCollection.FindAsync(p=>p.Id == id)).FirstOrDefaultAsync();
         if(hotel == null)
         {
-            return null;
+            throw new Exception("Hotel not exist");
         }
         return hotel;
     }
@@ -65,7 +59,7 @@ public class HotelManager
         var hotel = await (await _hotelCollection.FindAsync(p => p.Id == id)).FirstOrDefaultAsync();
         if (hotel == null)
         {
-            return null;
+            throw new Exception("Hotel not exist");
         }
 
         hotel.Name = model.Name;

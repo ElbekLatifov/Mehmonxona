@@ -2,15 +2,23 @@
 using MongoDB.Driver;
 using OrganizationApi.Entities;
 using OrganizationApi.Models;
+using OrganizationApi.Services;
+using System.Data;
 
 namespace OrganizationApi.Manager;
 
 public class RoomManager
 {
-    private MongoClient MongoClient = new MongoClient("mongodb://elbek:elbek@localhost:27017");
-    private IMongoDatabase Database => MongoClient.GetDatabase("hotels_db");
-    private IMongoCollection<Hotel> _hotelCollection => Database.GetCollection<Hotel>("hotels");
-    private IMongoCollection<Room> _roomCollection => Database.GetCollection<Room>("rooms");
+    private MongoService _mongoService;
+
+    public RoomManager(MongoService mongoService)
+    {
+        _mongoService = mongoService;
+    }
+
+    private IMongoCollection<Hotel> _hotelCollection => _mongoService._hotelCollection;
+    private IMongoCollection<Room> _roomCollection => _mongoService._roomCollection;
+
 
     public async Task<Room> CreateRoom(Guid hotelid, CreateRoomModel model)
     {
@@ -19,7 +27,7 @@ public class RoomManager
 
         if(hotel == null)
         {
-            return null;
+            throw new Exception("Hotel not found");
         }
 
         var room = new Room()
@@ -61,7 +69,7 @@ public class RoomManager
         var room = await (await _roomCollection.FindAsync(p => p.Id == roomid)).FirstOrDefaultAsync();
         if (room == null)
         {
-            return null;
+            throw new Exception("Takoy room not exist");
         }
         return room;
     }
@@ -74,7 +82,7 @@ public class RoomManager
 
         if (room == null)
         {
-            return null;
+            throw new Exception("Takoy room not exist");
         }
         var indexRoom = hotel.Rooms.IndexOf(room);
         hotel.Rooms[indexRoom] = room;
@@ -95,7 +103,7 @@ public class RoomManager
         var hotel = await (await _hotelCollection.FindAsync(p => p.Id == hotelid)).FirstOrDefaultAsync();
         var room = hotel.Rooms.FirstOrDefault(p => p.Id == roomid);
 
-        hotel.Rooms.Remove(room);
+        hotel.Rooms.Remove(room!);
         await _roomCollection.DeleteOneAsync(filter);
     }
 
@@ -108,20 +116,11 @@ public class RoomManager
         var hotel = await (await _hotelCollection.FindAsync(p => p.Id == hotelid)).FirstOrDefaultAsync();
         var room = hotel.Rooms.FirstOrDefault(p => p.Id == roomid);
 
-        var indexRoom = hotel.Rooms.IndexOf(room);
+        var indexRoom = hotel.Rooms.IndexOf(room!);
 
-        if(!room.IsEmpty)
+        if(!room!.IsEmpty)
         {
-            if (DateTime.Now < room.EndTime)
-            {
-                return $"Bo'sh emas {room.StartTime} dan {room.EndTime} gacha, uzr boshqa xona buyurtma qiling!";
-            }
-            else
-            {
-                room.IsEmpty = true ;
-                return "qayta urinib ko'ring!";
-            }
-
+            return $"Bo'sh emas {room.StartTime} dan {room.EndTime} gacha, uzr boshqa xona buyurtma qiling yoki keyinroq urinib ko'ring!";
         }
         room.IsEmpty = false;
         room.StartTime = start;

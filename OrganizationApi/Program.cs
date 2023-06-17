@@ -1,4 +1,5 @@
 using OrganizationApi.Manager;
+using OrganizationApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<HotelManager>();
 builder.Services.AddScoped<RoomManager>();
+builder.Services.AddScoped<MongoService>();
+builder.Services.AddHostedService<IsEmptyRoomsService>();
+
 //builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
