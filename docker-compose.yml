@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  chat_api:
+    image: chat_image
+    container_name: chatapi
+    ports:
+      - "7021:80"
+    build:
+      context: .
+      dockerfile: Dockerfile.ChatApi
+
+  chat_db:
+    image: postgres:latest
+    container_name: contact
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - chat_db_data:/var/lib/chat/data/
+
+  identity_api:
+    image: identityt_image
+    container_name: identity_api
+    ports:
+      - "7031:80"
+    build:
+      context: .
+      dockerfile: Dockerfile.IdentityApi
+
+  identity_user:
+    image: postgres:latest
+    container_name: identity_db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - identity_db_data:/var/lib/identity/data/
+
+  organization_api:
+    image: eax_image
+    container_name: organapi
+    ports:
+      - "7041:80"
+    build:
+      context: .
+      dockerfile: Dockerfile.OrganizationApi
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongo_db
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: elbek
+      MONGO_INITDB_ROOT_PASSWORD: elbek
+  
+volumes:
+  chat_db_data:  
+  identity_db_data:

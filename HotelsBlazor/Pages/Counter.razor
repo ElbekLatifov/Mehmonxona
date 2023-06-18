@@ -1,0 +1,54 @@
+﻿@page "/counter"
+@using HotelsBlazor.Entities;
+@inject HttpClient cline
+
+<PageTitle>Counter</PageTitle>
+
+<h1 style="text-align:center;">Hotels</h1>
+<br />
+@if(Hotelsss == null)
+{
+    <center>
+        <div class="spinner-grow text-primary" role="status" style="width:20rem;height:20rem;margin:5%;">
+            <span class="visually-hidden" style="font-size:20%;">Loading...</span>
+        </div>
+    </center>
+    <center>
+        <button class="btn btn-primary" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+    </center>
+}
+else
+{
+    foreach (var hotel in Hotelsss!)
+    {
+        var adres = $"{hotel.Address!.Country} {hotel.Address.City} city, {hotel.Address.Street} street. Phone: {hotel.Address.Phone}";
+
+        <div class="card text-center">
+            <div class="card-header" style="font-size:30px; color:red;">
+                @hotel.Name
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@hotel.Description</h5>
+                <p class="card-text">Price for 1 day: @hotel.PriceOneDay $</p>
+                <p class="card-text">@adres</p>
+                <a href="/rooms/@hotel.Id" class="btn btn-primary">Go to hotel</a>
+            </div>
+            <div class="card-footer text-body-secondary">
+                Total @hotel.CountRooms rooms
+            </div>
+        </div>
+    }
+}
+
+
+@code {
+    private List<Hotel>? Hotelsss = new List<Hotel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/api/Hotels");
+    }
+}

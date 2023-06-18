@@ -1,0 +1,76 @@
+﻿@page "/rooms/{HotelId}"
+@using HotelsBlazor.Entities;
+@inject HttpClient cline
+
+<h3 style="text-align:center;font-size:50px;">@Hotell.Name Rooms</h3>
+
+<div class="nav justify-content-end" style=" align-items:end; display:flex;">
+    <div class="dropdown" style="align-items:end;">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tariff
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">All</a></li>
+            <li><a class="dropdown-item" href="#">Lux</a></li>
+            <li><a class="dropdown-item" href="#">Free</a></li>
+            <li><a class="dropdown-item" href="#">Special</a></li>
+            <li><a class="dropdown-item" href="#">Econom</a></li>
+        </ul>
+    </div>
+    
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Type
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">All</a></li>
+            <li><a class="dropdown-item" href="#">Friends</a></li>
+            <li><a class="dropdown-item" href="#">Collague</a></li>
+            <li><a class="dropdown-item" href="#">BrideGroom</a></li>
+            <li><a class="dropdown-item" href="#">Alone</a></li>
+        </ul>
+    </div>
+
+    <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Number room" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+</div>
+
+
+
+<br />
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach(var room in rooms)
+    {
+        <div class="card text-bg-primary mb-3" style="max-width: 18rem; margin: 2%;">
+            <div class="card-header">Number : @room.Number</div>
+            <div class="card-body">
+                <h5 class="card-title">This room for @room.ForWho</h5>
+                <p class="card-text">@room.Volume humans</p>
+                <p class="card-text">@room.Description</p>
+                <p class="card-text">@(room.IsEmpty ? "Empty" : $"Not empty, {room.EndTime} gacha")</p>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string HotelId { get; set; }
+
+    private Hotel Hotell { get; set; }
+    private List<Room> rooms { get; set; }
+
+    private List<Hotel>? Hotelsss = new List<Hotel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/api/Hotels");
+        Hotell = Hotelsss!.Where(p => p.Id == Guid.Parse(HotelId)).FirstOrDefault()!;
+        rooms = Hotell.Rooms.ToList();
+    }
+}

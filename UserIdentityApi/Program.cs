@@ -1,8 +1,6 @@
-using IdentityApi.Acessor;
 using IdentityApi.Context;
 using IdentityApi.Errors;
 using IdentityApi.Jwt;
-using IdentityApi.Manager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -44,9 +42,7 @@ var logger = new LoggerConfiguration().WriteTo.File("logger.txt",
 
 builder.Services.AddSerilog(logger);
 builder.Services.AddScoped<GetToken>();
-builder.Services.AddScoped<ChatManager>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<UserAcessor>();
 
 
 builder.Services.AddSwaggerGen(c =>
@@ -82,11 +78,11 @@ var app = builder.Build();
     app.UseSwagger();
     app.UseSwaggerUI();
 
-//if (app.Services.GetService<AppDbContext>() != null)
-//{
-//    var chatDb = app.Services.GetRequiredService<AppDbContext>();
-//    chatDb.Database.Migrate();
-//}
+if (app.Services.GetService<AppDbContext>() != null)
+{
+    var chatDb = app.Services.GetRequiredService<AppDbContext>();
+    chatDb.Database.Migrate();
+}
 
 
 app.UseHttpsRedirection();

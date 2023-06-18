@@ -1,14 +1,10 @@
-﻿using ChatLibrary.Entities;
-using IdentityApi.Entities;
+﻿using IdentityApi.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace IdentityApi.Context
 {
     public class AppDbContext : DbContext 
     {
-        public DbSet<ChatGroup> ChatGroups { get; set; }
-        public DbSet<Message> Messages { get; set; }
         public DbSet<User> Users { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -17,7 +13,7 @@ namespace IdentityApi.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;");
+            optionsBuilder.UseNpgsql("Server=identity_user;Port=5432;Database=identity_db;User Id=postgres;Password=postgres;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

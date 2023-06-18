@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using IdentityApi.Acessor;
-using ChatLibrary.Models;
-using ChatLibrary.Entities;
-using IdentityApi.Manager;
+﻿using Microsoft.AspNetCore.Mvc;
+using ChatApi.Acessor;
+using ChatApi.Manager;
+using ChatApi.Models;
 
-namespace IdentityApi.Controllers
+namespace ChatApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

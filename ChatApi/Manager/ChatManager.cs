@@ -1,11 +1,9 @@
-﻿using ChatLibrary.Entities;
-using ChatLibrary.Models;
-using ChatApi.Context;
-using Microsoft.AspNetCore.SignalR;
+﻿using ChatApi.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+using ChatApi.Models;
+using ChatApi.Entities;
 
-namespace IdentityApi.Manager;
+namespace ChatApi.Manager;
 
 public class ChatManager //IHubContext<ConversationHub> conversationHubContext
 {

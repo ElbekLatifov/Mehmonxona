@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace IdentityApi.Acessor
+namespace ChatApi.Acessor
 {
     public class UserAcessor 
     {
