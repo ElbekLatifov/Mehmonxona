@@ -25,16 +25,17 @@ public class IsEmptyRoomsService : BackgroundService
         foreach (var hotel in hotels)
         {
             var rooms = hotel.Rooms.FindAll(p => p.IsEmpty == false);
-            var filter = Builders<Hotel>.Filter.Eq(p=>p.Rooms, rooms);
 
             foreach (var room in rooms)
             {
                 if (room.EndTime < DateTime.Now)
                 {
                     room.IsEmpty = true;
-                    _mongoService._hotelCollection.ReplaceOne(filter, hotel);
                 }
             }
+
+            var filter = Builders<Hotel>.Filter.Eq(p => p.Id, hotel.Id);
+            _mongoService._hotelCollection.ReplaceOne(filter, hotel);
         }
     }
 }

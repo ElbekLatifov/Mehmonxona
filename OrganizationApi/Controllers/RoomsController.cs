@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrganizationApi.Entities;
 using OrganizationApi.Manager;
@@ -8,6 +8,7 @@ namespace OrganizationApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class RoomsController : ControllerBase
 {
     private readonly RoomManager roomManager;
@@ -17,22 +18,34 @@ public class RoomsController : ControllerBase
         this.roomManager = roomManager;
     }
 
-    [HttpGet("ex")]
-    public List<Room> GetRooms()
-    {
-        return roomManager.GetRooms();
-    }
-
     [HttpGet]
     public async Task<List<Room>> GetRooms(Guid hotelid)
     {
         return await roomManager.GetRooms(hotelid);
     }
 
-    [HttpGet("id")]
-    public async Task<Room> GetRoomById(Guid id)
+    [HttpGet("tariff")]
+    public async Task<List<Room>> GetRoomById(Guid hotelid, Role role)
     {
-        return await roomManager.GetRoomById(id);
+        return await roomManager.GetRoomByTariff(hotelid, role);
+    }
+
+    [HttpPost("tariffgroup")]
+    public async Task<List<Room>> GetRoomByTariffGroup(List<Room> rooms, Role role)
+    {
+        return await roomManager.GetRoomByTariffGroup(role, rooms);
+    }
+
+    [HttpGet("type")]
+    public async Task<List<Room>> GetRoomByType(Guid hotelid, EClass type)
+    {
+        return await roomManager.GetRoomByType(hotelid, type);
+    }
+
+    [HttpPost("tariffgroup")]
+    public async Task<List<Room>> GetRoomByTypeGroup(List<Room> rooms, EClass type)
+    {
+        return await roomManager.GetRoomByTypeGroup(type, rooms);
     }
 
     [HttpPost]
@@ -55,9 +68,15 @@ public class RoomsController : ControllerBase
         return Ok("deleted room");
     }
 
-    [HttpPost("Buyurtma")]
-    public async Task<string> Buyurtma(Guid hotelid, Guid roomid, DateTime start, DateTime end)
+    [HttpGet("number")]
+    public async Task<Room> GetByNumber(Guid hotelid, int number)
     {
-        return await roomManager.Buyurtma(hotelid, roomid, start, end);
+        return await roomManager.GetRoomByNumber(hotelid, number);
+    }
+
+    [HttpPost("Buyurtma")]
+    public async Task<string> Buyurtma(Guid hotelid, Guid roomid, BandRoomModel model)
+    {
+        return await roomManager.Buyurtma(hotelid, roomid, model);
     }
 }

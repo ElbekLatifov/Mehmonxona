@@ -8,4 +8,5 @@ public class CreateRoomModel
     public Role Description { get; set; }
     public int Volume { get; set; }
     public EClass ForWho { get; set; }
+    public int PriceOneDay { get; set; }
 }

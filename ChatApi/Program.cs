@@ -73,12 +73,15 @@ if (app.Services.GetService<AppDbContext>() != null)
     var organizationDb = app.Services.GetRequiredService<AppDbContext>();
     organizationDb.Database.Migrate();
 }
-
+app.UseCors(c =>
+{
+    c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+});
 app.UseLoggerMiddleware();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseMiddleware<LoggerMiddleware>();
 app.MapControllers();
 
 app.Run();

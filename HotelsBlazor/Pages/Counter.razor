@@ -49,6 +49,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/api/Hotels");
+        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/Hotels");
     }
 }

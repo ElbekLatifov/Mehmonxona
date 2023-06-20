@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OrganizationApi.Entities;
 using OrganizationApi.Manager;
@@ -18,30 +19,33 @@ public class HotelsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<Hotel> CreateHotel(CreateHotelModel model)
+    [Authorize]
+    public async Task<HotelModel> CreateHotel(CreateHotelModel model)
     {
         return await hotelManager.CreateHotel(model);
     }
 
     [HttpGet]
-    public async Task<List<Hotel>> GetHotels()
+    public async Task<List<HotelModel>> GetHotels()
     {
         return await hotelManager.GetHotels();
     }
 
     [HttpGet("id")]
-    public async Task<Hotel> GetHotelById(Guid id)
+    public async Task<HotelModel> GetHotelById(Guid id)
     {
         return await hotelManager.GetHotelById(id);
     }
 
     [HttpPut("id")]
-    public async Task<Hotel> UpdateHotel(Guid id, [FromBody] CreateHotelModel hotel)
+    [Authorize]
+    public async Task<HotelModel> UpdateHotel(Guid id, [FromBody] CreateHotelModel hotel)
     {
         return await hotelManager.UpdateHotel(id, hotel);
     }
 
     [HttpDelete("id")]
+    [Authorize]
     public async Task<IActionResult> DeleteHotel(Guid id)
     {
         await hotelManager.DeleteHotel(id);

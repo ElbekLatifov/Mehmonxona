@@ -1,4 +1,9 @@
-﻿<h3>SignUp</h3>
+﻿@page "/signup"
+
+@using HotelsBlazor.Entities.Models;
+@inject NavigationManager NavManager
+@inject HttpClient Http
+<h3>SignUp</h3>
 
 <form class="row g-3" style="width: 400px ;margin: auto">
     <div>
@@ -8,9 +13,8 @@
         <input @bind="_userModel.Password" class="form-control" type="text" placeholder="Password" required />
     </div>
     <div>
-        <input @bind="_userModel.ConfirmPassword" class="form-control" type="text" placeholder="ConfirmPassword" required />
+        <input @bind="_userModel.PasswordConfirmed" class="form-control" type="text" placeholder="ConfirmPassword" required />
     </div>
-    <ValidationMessage For="@(() => _userModel.ConfirmPassword)" />
     <div>
         <input @bind="_userModel.UserName" class="form-control" type="text" placeholder="Username" required />
     </div>
@@ -18,14 +22,14 @@
 </form>
 
 @code {
-    private CreateUserModel? _userModel = new CreateUserModel();
+    private UserDto? _userModel = new UserDto();
     private async Task Register()
     {
-        var response = await Http.PostAsJsonAsync("/account/register", _userModel);
+        var response = await Http.PostAsJsonAsync("/User/Create", _userModel);
 
         if (response.IsSuccessStatusCode)
         {
-            NavManager.NavigateTo("/counter");
+            NavManager.NavigateTo("/login");
         }
     }
 }

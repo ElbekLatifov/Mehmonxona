@@ -1,0 +1,91 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/User/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/User/{everything}"
+
+    },
+    {
+      "UpstreamPathTemplate": "/Chat",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chat_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Chat"
+
+    },
+    {
+      "UpstreamPathTemplate": "/Chat/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chat_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Chat/{everything}"
+    },
+    {
+      "UpstreamPathTemplate": "/Hotels",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "organization_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Hotels"
+    },
+    {
+      "UpstreamPathTemplate": "/Hotels/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "organization_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Hotels/{everything}"
+
+    },
+    {
+      "UpstreamPathTemplate": "/Rooms",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "organization_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Rooms"
+    },
+    {
+      "UpstreamPathTemplate": "/Rooms/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "organization_api",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Rooms/{everything}"
+    }
+  ]
+}

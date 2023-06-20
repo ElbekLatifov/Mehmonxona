@@ -7,121 +7,122 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace IdentityApi.Controllers
+namespace IdentityApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UserController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+    private readonly AppDbContext _context;
+    private readonly GetToken _token;
+
+    public UserController(AppDbContext context, GetToken token)
     {
-        private readonly AppDbContext _context;
-        private readonly GetToken _token;
+        _context = context;
+        _token = token;
+    }
 
-        public UserController(AppDbContext context, GetToken token)
+    [HttpPost]
+    [Route("Create")]
+    public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        if(dto.Password != dto.PasswordConfirmed) 
         {
-            _context = context;
-            _token = token;
+            return BadRequest("Password no same");
         }
 
-        [HttpPost]
-        [Route("/Create")]
-        public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
+        var user = dto.Adapt<User>();
+
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return Ok(user);
+    }
+    [HttpPost]
+    [Route("GetToken")]
+    public async Task<IActionResult> GetToken([FromBody] ForToken toke)
+    {
+        if (toke == null) { return BadRequest(ModelState); }
+
+        if (!ModelState.IsValid) { return BadRequest(ModelState); }
+
+        var user = await _context.Users.FirstOrDefaultAsync(p=>p.UserName == toke.UserName);
+        
+        if(user == null || user.Password != toke.Password)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if(dto.Password != dto.PasswordConfirmed) 
-            {
-                return BadRequest("Password no same");
-            }
-
-            var user = dto.Adapt<User>();
-
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-        [HttpPost]
-        [Route("/GetToken")]
-        public async Task<IActionResult> GetToken([FromBody] ForToken toke)
-        {
-            if (toke == null) { return BadRequest(ModelState); }
-
-            if (!ModelState.IsValid) { return BadRequest(ModelState); }
-
-            var user = await _context.Users.FirstOrDefaultAsync(p=>p.UserName == toke.UserName);
-            
-            if(user == null || user.Password != toke.Password)
-            {
-                return NotFound();
-            }
-
-            var token = _token.Token(user);
-
-            return Ok(token);
+            return NotFound();
         }
 
-        [HttpPost]
-        [Route("getuser")]
-        public async Task<IActionResult> GetUserByUserName([FromForm] string username)
+        var token = _token.Token(user);
+
+        return Ok(new { Token = token });
+    }
+
+    [HttpPost]
+    [Route("getuser")]
+    public async Task<IActionResult> GetUserByUserName([FromForm] string username)
+    {
+        if(username == null)
         {
-            if(username == null)
-            {
-                return BadRequest();
-            }
-
-            if(!_context.Users.Any(x => x.UserName == username))
-            {
-                return NotFound();
-            }
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
-            return Ok(user);
+            return BadRequest();
         }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUser(string username)
+
+        if(!_context.Users.Any(x => x.UserName == username))
         {
-            if (username == null)
-            {
-                return BadRequest();
-            }
-
-            if (!_context.Users.Any(x => x.UserName == username))
-            {
-                return NotFound();
-            }
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
-            _ = _context.Users.Remove(user!);
-            return Ok("removed");
+            return NotFound();
         }
-        [HttpPut]
-        public async Task<IActionResult> UpdateUser(string username, [FromForm] UserDto dto)
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+        return Ok(user);
+    }
+    [HttpDelete]
+    [Route("Delete")]
+    public async Task<IActionResult> DeleteUser(string username)
+    {
+        if (username == null)
         {
-
-            if (dto == null)
-            {
-                return BadRequest();
-            }
-            if (dto.Password != dto.PasswordConfirmed)
-            {
-                return BadRequest("Password no same");
-            }
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
-
-            user = dto.Adapt<User>();
-            
-            _context.Users.Update(user);  
-            _context.SaveChanges();
-            return Ok(user);
+            return BadRequest();
         }
-        [HttpGet]
-        [Route("/Profile")]
-        [Authorize]
-        public async Task<IActionResult> Profile()
+
+        if (!_context.Users.Any(x => x.UserName == username))
         {
-            var userid = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            var user = await _context.Users.FirstOrDefaultAsync(p=>p.Id== userid);
-            if (user == null) { return NotFound(); }
-
-            return Ok(user);
+            return NotFound();
         }
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+        _ = _context.Users.Remove(user!);
+        return Ok("removed");
+    }
+    [HttpPut]
+    [Route("Update")]
+    public async Task<IActionResult> UpdateUser(string username, [FromForm] UserDto dto)
+    {
+
+        if (dto == null)
+        {
+            return BadRequest();
+        }
+        if (dto.Password != dto.PasswordConfirmed)
+        {
+            return BadRequest("Password no same");
+        }
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+
+        user = dto.Adapt<User>();
+        
+        _context.Users.Update(user);  
+        _context.SaveChanges();
+        return Ok(user);
+    }
+    [HttpGet]
+    [Route("Profile")]
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        var userid = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var user = await _context.Users.FirstOrDefaultAsync(p=>p.Id== userid);
+        if (user == null) { return NotFound(); }
+
+        return Ok(user);
     }
 }

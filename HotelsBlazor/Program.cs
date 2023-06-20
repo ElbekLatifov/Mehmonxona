@@ -11,6 +11,6 @@ builder.Services.AddScoped<RequestManager>();
 builder.Services.AddScoped<HotelsManager>();
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7124") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:7025") });
 
 await builder.Build().RunAsync();

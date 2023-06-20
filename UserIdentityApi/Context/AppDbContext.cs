@@ -13,7 +13,7 @@ namespace IdentityApi.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Server=identity_user;Port=5432;Database=identity_db;User Id=postgres;Password=postgres;");
+            optionsBuilder.UseNpgsql("Server=identity_db;Port=5432;Database=identity_db;User Id=postgres;Password=postgres;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,7 +27,8 @@ namespace IdentityApi.Context
 
             modelBuilder.Entity<User>().Property(p=>p.Password)
                 .HasMaxLength(8)
-                .IsRequired().IsFixedLength(true);
+                    .IsRequired()
+                        .IsFixedLength(true);
         }
     }
 }

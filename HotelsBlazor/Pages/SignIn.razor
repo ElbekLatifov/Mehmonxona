@@ -1,4 +1,11 @@
-﻿<h3>SignIn</h3>
+﻿@page "/login"
+
+@using Blazored.LocalStorage;
+@using HotelsBlazor.Entities.Models;
+@inject HttpClient Htpp
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService Storage
+<h3>SignIn</h3>
 
 <form class="row g-3" style="width: 400px ;margin: auto">
     <div>
@@ -11,10 +18,10 @@
 </form>
 
 @code {
-    private LoginUserModel? _userModel = new LoginUserModel();
+    private ForToken? _userModel = new ForToken();
     private async Task Login()
     {
-        var response = await Htpp.PostAsJsonAsync("/account/login", _userModel);
+        var response = await Htpp.PostAsJsonAsync("/User/GetToken", _userModel);
         var token = await response.Content.ReadAsStringAsync();
         await Storage.SetItemAsStringAsync("token", token);
         if (response.IsSuccessStatusCode)
@@ -24,7 +31,7 @@
             if (!string.IsNullOrEmpty(result?.Token))
             {
                 await Storage.SetItemAsStringAsync("token", result.Token);
-                NavigationManager.NavigateTo("/counter");
+                NavigationManager.NavigateTo("/profile");
             }
         }
 

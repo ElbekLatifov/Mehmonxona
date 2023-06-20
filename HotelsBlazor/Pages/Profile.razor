@@ -1,5 +1,22 @@
-﻿<h3>Profile</h3>
+﻿@page "/profile"
+@using Blazored.LocalStorage;
+@using HotelsBlazor.Entities.Models;
+@inject ILocalStorageService storage
+@inject HttpClient Http
+
+<h3>Profile</h3>
+
+<h3>@user.Name</h3>
 
 @code {
+    User? user = new User();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var token = storage.GetItemAsStringAsync("token");
+        var request = new HttpRequestMessage(HttpMethod.Get, "/User/Profile");
+        request.Headers.Add("Authorization",$"Bearer {token}");
+        var response = await Http.SendAsync(request);
+        user = await response.Content.ReadFromJsonAsync<User>();
+    }
 }

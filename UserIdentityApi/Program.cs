@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.Configure<JwtDto>(builder.Configuration.GetSection("JwtSettings"));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     var signingKey = System.Text.Encoding.UTF32.GetBytes(builder.Configuration.GetValue<string>("JwtSettings:SigningKey")!);
 
