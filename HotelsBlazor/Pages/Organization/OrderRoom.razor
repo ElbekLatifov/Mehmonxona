@@ -1,0 +1,40 @@
+﻿@page "/order/{HotelId}/{RoomId}"
+@using Blazored.LocalStorage;
+@using HotelsBlazor.Entities.Models;
+@using System.Net.Http.Json;
+@using HotelsBlazor.Managers;
+@inject HttpClient htp
+@inject NavigationManager manager
+@inject RequestManager request
+
+<h3>OrderRoom</h3>
+
+<form>
+    <label>Start:</label>
+    <input @bind="@band!.StartTime" type="datetime" />
+    <label>End:</label>
+    <input @bind="@band.EndTime"  type="datetime" />
+    <button class="form-control" type="button" @onclick="( async  ()=> await Create() ) ">Ok</button>
+</form>
+
+@if(Result != null)
+{
+    <h1>@Result</h1>
+}
+
+@code {
+    [Parameter]
+    public string? HotelId { get; set; }
+
+    [Parameter]
+    public string? RoomId { get; set; }
+
+    private BandRoomModel? band;
+
+    private string? Result { get; set; }
+
+    private async Task Create()
+    {
+        Result = await request.Post<string>($"/Hotels/hotels/{HotelId}/rooms/{RoomId}/order", band!);
+    }
+}

@@ -13,8 +13,8 @@ public class Room
     public bool IsEmpty { get; set; }
     public EClass Type { get; set; }
     public Guid HotelId { get; set; }
-    public DateTime StartTime { get; set; }
     public int PriceOneDay { get; set; }
+    public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
 }
 

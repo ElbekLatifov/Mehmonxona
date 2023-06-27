@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using OrganizationApi.Entities;
 using OrganizationApi.Models;
 using OrganizationApi.Services;
@@ -36,12 +35,12 @@ public class RoomManager
         return room;
     }
 
-    //public List<Room> GetRooms()
-    //{
-    //    var rooms = _roomCollection.Find(_ => true);
+    public async Task<List<Room>> GetRooms()
+    {
+        var rooms = await(await _roomCollection.FindAsync(_ => true)).ToListAsync();
 
-    //    return rooms.ToList();
-    //}
+        return rooms;
+    }
 
     public async Task<List<Room>> GetRooms(Guid hotelId)
     {
@@ -102,7 +101,7 @@ public class RoomManager
         {
             throw new Exception("Rooms are null");
         }
-        var rooms = roomlar.FindAll(p =>p.Type == eClass).ToList();
+        var rooms = roomlar.FindAll(p =>p.Type == eClass);
         if (rooms == null)
         {
             throw new Exception("Takoy room not exist");
@@ -110,28 +109,7 @@ public class RoomManager
         return rooms;
     }
 
-    public async Task<Room> UpdateRoom(Guid hotelid, Guid roomid, CreateRoomModel model)
-    {
-        var filter = Builders<Room>.Filter.Eq(p => p.Id, roomid);
-
-        var room = await (await _roomCollection.FindAsync(p=>p.HotelId == hotelid && p.Id == roomid)).FirstOrDefaultAsync();
-
-        if (room == null)
-        {
-            throw new Exception("Takoy room not exist");
-        }
-
-        room.Number = model.Number;
-        room.Tariff = model.Description;
-        room.Type = model.ForWho;
-        room.Volume = model.Volume;
-        room.PriceOneDay = model.PriceOneDay;
-
-        await _roomCollection.ReplaceOneAsync(filter, room);
-
-        return room;
-    }
-
+    
     public async Task DeleteRoom(Guid hotelid, Guid roomid)
     {
         var filter = Builders<Room>.Filter.Eq(p => p.Id, roomid);
@@ -139,25 +117,5 @@ public class RoomManager
         var room = await(await _roomCollection.FindAsync(p =>p.HotelId == hotelid && p.Id == roomid)).FirstOrDefaultAsync();
 
         await _roomCollection.DeleteOneAsync(filter);
-    }
-
-    public async Task<string> Buyurtma(Guid hotelid, Guid roomid, BandRoomModel band)
-    {
-
-        var filter = Builders<Room>.Filter.Eq(p => p.Id, roomid);
-
-        var room = await (await _roomCollection.FindAsync(p => p.HotelId == hotelid && p.Id == roomid)).FirstOrDefaultAsync();
-
-        if(!room!.IsEmpty)
-        {
-            return $"Bo'sh emas {room.StartTime} dan {room.EndTime} gacha, uzr boshqa xona buyurtma qiling yoki keyinroq urinib ko'ring!";
-        }
-        room.IsEmpty = false;
-        room.StartTime = band.StartTime;
-        room.EndTime = band.EndTime;
-
-        _roomCollection.ReplaceOne(filter, room);
-
-        return "Buyurtma qabul qilindi";
     }
 }

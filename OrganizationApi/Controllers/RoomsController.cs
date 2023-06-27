@@ -18,6 +18,12 @@ public class RoomsController : ControllerBase
         this.roomManager = roomManager;
     }
 
+    [HttpGet("Total")]
+    public async Task<List<Room>> GetTotalRooms()
+    {
+        return await roomManager.GetRooms();
+    }
+
     [HttpGet]
     public async Task<List<Room>> GetRooms(Guid hotelid)
     {
@@ -42,22 +48,16 @@ public class RoomsController : ControllerBase
         return await roomManager.GetRoomByType(hotelid, type);
     }
 
-    [HttpPost("tariffgroup")]
+    [HttpPost("typegroup")]
     public async Task<List<Room>> GetRoomByTypeGroup(List<Room> rooms, EClass type)
     {
         return await roomManager.GetRoomByTypeGroup(type, rooms);
     }
 
-    [HttpPost]
+    [HttpPost("{id}")]
     public async Task<Room> CreateRoom(Guid id, CreateRoomModel model)
     {
         return await roomManager.CreateRoom(id, model);
-    }
-
-    [HttpPut]
-    public async Task<Room> UpdateRoom(Guid hotelid, Guid id, [FromBody] CreateRoomModel model)
-    {
-        return await roomManager.UpdateRoom(hotelid, id, model);
     }
 
     [HttpDelete]
@@ -72,11 +72,5 @@ public class RoomsController : ControllerBase
     public async Task<Room> GetByNumber(Guid hotelid, int number)
     {
         return await roomManager.GetRoomByNumber(hotelid, number);
-    }
-
-    [HttpPost("Buyurtma")]
-    public async Task<string> Buyurtma(Guid hotelid, Guid roomid, BandRoomModel model)
-    {
-        return await roomManager.Buyurtma(hotelid, roomid, model);
-    }
+    }   
 }

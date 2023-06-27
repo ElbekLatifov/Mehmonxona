@@ -11,7 +11,7 @@ public class Hotel
     public string? Description { get; set; }
     public required Address Address { get; set; }
     public List<Room> Rooms { get; set; } = new List<Room>();
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 }
 
 public class Address

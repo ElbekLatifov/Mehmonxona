@@ -1,0 +1,106 @@
+﻿@page "/rooms/{HotelId}"
+@using HotelsBlazor.Entities;
+@using HotelsBlazor.Managers;
+@inject HttpClient cline
+@inject RequestManager request
+
+<h3 style="text-align:center;font-size:50px;">@Hotell!.Name 's Rooms</h3>
+
+<div class="nav justify-content-end" style=" align-items:end; display:flex;">
+    <div class="dropdown" style="align-items:end;">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Tariff
+        </button>
+        <ul class="dropdown-menu">
+            @foreach(var list in TypeList())
+            {
+                <li><a class="dropdown-item" href="#">@list</a></li>
+            }
+        </ul>
+    </div>
+    
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Type
+        </button>
+        <ul class="dropdown-menu">
+            @foreach(var list in TariflIST())
+            {
+                <li><a class="dropdown-item" href="#">@list</a></li>
+            }
+        </ul>
+    </div>
+
+    <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Number room" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+</div>
+
+
+
+<br />
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach(var room in rooms!)
+    {
+        <div class="card text-bg-primary mb-3" style="max-width: 18rem; margin: 2%;">
+            <div class="card-header">Number : @room.Number</div>
+            <div class="card-body">
+                <h5 class="card-title">This room for @room.Type</h5>
+                <p class="card-text">@room.Volume humans</p>
+                <p class="card-text">@room.Tariff</p>
+                <p class="card-text">Price for 1 day: @room.PriceOneDay $</p>
+                <p class="card-text">@(room.IsEmpty ? "Empty" : $"Not empty, {room.EndTime} gacha")</p>
+                <a href="/order/{@Hotell.Id}/{@room.Id}">Band qqilish</a>
+                <button class="btn-danger" type="button" @onclick="(async ()=> await Delete(room.Id))">Delete</button>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string? HotelId { get; set; }
+
+    private Hotel? Hotell { get; set; }
+
+    private List<Room>? rooms { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Hotell = await request.Get<Hotel>($"/Hotels/{HotelId}");
+        rooms = Hotell!.Rooms.ToList();
+    }
+
+    private async Task Delete(Guid roomid)
+    {
+        await request.Delete<string>($"/Rooms/{roomid}");
+    }
+
+    public List<string> TariflIST()
+    {
+        List<string> c = new List<string>();
+        c.Add("All");
+        c.Add("Lux");
+        c.Add("Free");
+        c.Add("Special");
+        c.Add("Econom");
+        return c;
+    }
+
+    public List<string> TypeList()
+    {
+        List<string> c = new List<string>();
+        c.Add("All");
+        c.Add("Friends");
+        c.Add("Family");
+        c.Add("Collague");
+        c.Add("BrideGroom");
+        c.Add("Alone");
+        return c;
+    }
+
+}

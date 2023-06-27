@@ -14,9 +14,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<HotelManager>();
-builder.Services.AddSingleton<RoomManager>();
-builder.Services.AddSingleton<MongoService>();
+builder.Services.AddScoped<HotelManager>();
+builder.Services.AddScoped<RoomManager>();
+builder.Services.AddScoped<MongoService>();
+builder.Services.AddScoped<ForBackground>();
 builder.Services.AddHostedService<IsEmptyRoomsService>();
 builder.Services.AddScoped<UserAcessor>();
 

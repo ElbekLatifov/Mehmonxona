@@ -11,6 +11,6 @@ public class UserAcessor
         _contextAccessor = contextAccessor;
     }
 
-    public string UserName => _contextAccessor.HttpContext.User.FindFirstValue(claimType: ClaimTypes.Name)!;
+    public string UserName => _contextAccessor.HttpContext!.User.FindFirstValue(claimType: ClaimTypes.Name)!;
     public Guid UserId => Guid.Parse(_contextAccessor.HttpContext!.User.FindFirstValue(claimType: ClaimTypes.NameIdentifier)!);
 }

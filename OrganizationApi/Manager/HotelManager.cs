@@ -27,12 +27,11 @@ public class HotelManager
         {
             Name = model.Name,
             Description = model.Description,
-            Address = model.Address,
-            UserId = acessor.UserId
+            Address = model.Address
         };
 
         await _hotelCollection.InsertOneAsync(hotel);
-        var mod = ParseToHotelModel(hotel);
+        var mod = await ParseToHotelModel(hotel);
         return mod;
     }
 
@@ -42,7 +41,7 @@ public class HotelManager
         var models = new List<HotelModel>();
         foreach (var hotel in hotels)
         {
-            models.Add(ParseToHotelModel(hotel));
+            models.Add(await ParseToHotelModel(hotel));
         }
         return models;
     }
@@ -54,7 +53,7 @@ public class HotelManager
         {
             throw new Exception("Hotel not exist");
         }
-        var model = ParseToHotelModel(hotel);
+        var model = await ParseToHotelModel(hotel);
         return model;
     }
 
@@ -73,10 +72,33 @@ public class HotelManager
 
         await _hotelCollection.ReplaceOneAsync(filter, hotel);
 
-        var modell = ParseToHotelModel(hotel);
+        var modell = await ParseToHotelModel(hotel);
 
         return modell;
     }
+
+    public async Task<Room> UpdateRoom(Guid hotelid, Guid roomid, CreateRoomModel model)
+    {
+        var filter = Builders<Room>.Filter.Eq(p => p.Id, roomid);
+
+        var room = await (await _roomCollection.FindAsync(p => p.HotelId == hotelid && p.Id == roomid)).FirstOrDefaultAsync();
+
+        if (room == null)
+        {
+            throw new Exception("Takoy room not exist");
+        }
+
+        room.Number = model.Number;
+        room.Tariff = model.Description;
+        room.Type = model.ForWho;
+        room.Volume = model.Volume;
+        room.PriceOneDay = model.PriceOneDay;
+
+        await _roomCollection.ReplaceOneAsync(filter, room);
+
+        return room;
+    }
+
 
     public async Task DeleteHotel(Guid id)
     {
@@ -84,19 +106,22 @@ public class HotelManager
         await _hotelCollection.DeleteOneAsync(filter);
     }
 
-    private  HotelModel ParseToHotelModel(Hotel hotel)
+    private async  Task<HotelModel> ParseToHotelModel(Hotel hotel)
     {
         var model = new HotelModel()
         {
+            Id = hotel.Id,
             Name = hotel.Name,
             Description = hotel.Description,
-            Address = hotel.Address,
-            UserId = hotel.UserId
+            Address = hotel.Address
         };
 
-        var rooms = _roomCollection.Find(p=>p.HotelId == hotel.Id).ToList();
+        var rooms = await (await _roomCollection.FindAsync(p=>p.HotelId == hotel.Id)).ToListAsync();
 
-        hotel.Rooms = rooms;
+        if(rooms is not null)
+        {
+            model.Rooms = rooms;
+        }
 
         return model;
     }
@@ -108,7 +133,27 @@ public class HotelManager
         {
             throw new Exception("Hotel not exist");
         }
-        var model = ParseToHotelModel(hotel);
+        var model = await ParseToHotelModel(hotel);
         return model;
     }
+
+    public async Task<string> Buyurtma(Guid hotelid, Guid roomid, BandRoomModel band)
+    {
+        var filter = Builders<Room>.Filter.Eq(p => p.Id, roomid);
+
+        var room = await (await _roomCollection.FindAsync(p => p.HotelId == hotelid && p.Id == roomid)).FirstOrDefaultAsync();
+
+        if (room.EndTime > DateTime.Now)
+        {
+            return $"Bo'sh emas {room.StartTime} dan {room.EndTime} gacha, " +
+                        $"uzr boshqa xona buyurtma qiling yoki keyinroq urinib ko'ring!";
+        }
+        room.IsEmpty = false;
+        room.StartTime = band.StartTime;
+        room.EndTime = band.EndTime;
+
+        _roomCollection.ReplaceOne(filter, room);
+
+        return "Buyurtma qabul qilindi";
+    } 
 }

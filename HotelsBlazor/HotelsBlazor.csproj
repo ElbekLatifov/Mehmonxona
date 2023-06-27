@@ -7,9 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\OrderRoom.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+    <PackageReference Include="Radzen.Blazor" Version="4.13.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\OrderRoom.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\OrderRoom.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Organization\OrderRoom.razor" />
   </ItemGroup>
 
 </Project>

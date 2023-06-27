@@ -1,10 +1,14 @@
 ﻿@page "/counter"
 @using HotelsBlazor.Entities;
+@using HotelsBlazor.Managers;
 @inject HttpClient cline
+@inject RequestManager request
 
-<PageTitle>Counter</PageTitle>
+<PageTitle>Hotels</PageTitle>
 
 <h1 style="text-align:center;">Hotels</h1>
+<br />
+<a class="btn btn-danger" style="align-content:end;" href="/createhotel">Create hotel</a>
 <br />
 @if(Hotelsss == null)
 {
@@ -32,9 +36,9 @@ else
             </div>
             <div class="card-body">
                 <h5 class="card-title">@hotel.Description</h5>
-                <p class="card-text">Price for 1 day: @hotel.PriceOneDay $</p>
                 <p class="card-text">@adres</p>
                 <a href="/rooms/@hotel.Id" class="btn btn-primary">Go to hotel</a>
+                <button class="btn-danger" type="button" @onclick="(async()=> await Delete(hotel.Id))">Delete</button>
             </div>
             <div class="card-footer text-body-secondary">
                 Total @hotel.CountRooms rooms
@@ -49,6 +53,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/Hotels");
+        Hotelsss = await cline.GetFromJsonAsync<List<Hotel>>("/Hotels/hotels");
+    }
+
+    private async Task Delete(Guid id)
+    {
+        await request.Delete<string>($"/Hotels/{id}");
     }
 }

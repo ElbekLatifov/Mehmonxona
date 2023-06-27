@@ -1,0 +1,59 @@
+﻿@page "/createhotel"
+@using Blazored.LocalStorage;
+@using HotelsBlazor.Entities.Models;
+@using HotelsBlazor.Entities;
+@using HotelsBlazor.Managers;
+@inject HttpClient Http
+@inject RequestManager request
+@inject NavigationManager NavigationManager
+
+<h3>CreateHotel</h3>
+
+<form class="row g-3" style="width: 400px ;margin: auto">
+    <div>
+        <input @bind="Createmodel.Name" class="form-control" type="text" placeholder="Hotel Name" required />
+    </div>
+    <div>
+        <input @bind="Createmodel.Description" class="form-control" type="text" placeholder="Description" required />
+    </div>
+    <div>
+        <label>County</label>
+            <input @bind="Createmodel.Address.Country" class="form-control" type="text" required />
+        <label>City</label>
+            <input @bind="Createmodel.Address.City" class="form-control" type="text" required />
+        <label>Street</label>
+            <input @bind="Createmodel.Address.Street" class="form-control" type="text" required />
+        <label>Phone</label>
+            <input @bind="Createmodel.Address.Phone" class="form-control" type="number" required />
+    </div>
+    <button class="form-control" type="button" @onclick="( async  ()=> await Create() ) ">Create</button>
+</form>
+
+@code {
+    private CreateHotelModel? Createmodel;
+    private Hotel? hotel;
+
+    private async Task Create()
+    {
+        var hotel = await request.Post<Hotel>("/Hotels", Createmodel!);
+
+        if(hotel is not null)
+        {
+            NavigationManager.NavigateTo("/counter");
+        }
+
+        //hotel = await response.Content.ReadFromJsonAsync<Hotel>();
+        //var token = await response.Content.ReadAsStringAsync();
+        //await Storage.SetItemAsStringAsync("token", token);
+        //if (response.IsSuccessStatusCode)
+        //{
+
+        //    var result = await response.Content.ReadFromJsonAsync<LoginResult>();
+        //    if (!string.IsNullOrEmpty(result?.Token))
+        //    {
+        //        await Storage.SetItemAsStringAsync("token", result.Token);
+        //        NavigationManager.NavigateTo("/counter");
+        //    }
+        //}
+    }
+}

@@ -7,6 +7,7 @@
 @inject ILocalStorageService Storage
 <h3>SignIn</h3>
 
+
 <form class="row g-3" style="width: 400px ;margin: auto">
     <div>
         <input @bind="_userModel.UserName" class="form-control" type="text" placeholder="Username" required />
@@ -14,7 +15,7 @@
     <div>
         <input @bind="_userModel.Password" class="form-control" type="text" placeholder="Password" required />
     </div>
-    <button class="form-control" type="button" @onclick="( async  ()=> await Login() ) "> Sign Up</button>
+    <button class="form-control btn btn-danger" type="button" @onclick="( async  ()=> await Login() ) "> Sign Up</button>
 </form>
 
 @code {
@@ -35,9 +36,5 @@
             }
         }
 
-    }
-    public class LoginResult
-    {
-        public string Token { get; set; }
     }
 }
